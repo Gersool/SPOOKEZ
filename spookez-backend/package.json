@@ -1,0 +1,12 @@
+{
+  "name": "spookez-backend",
+  "version": "1.0.0",
+  "description": "SPOOKEZ — API + base de datos para pedidos y clientes (sin dependencias externas)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "author": "Manuel Gersol Megía",
+  "license": "ISC"
+}

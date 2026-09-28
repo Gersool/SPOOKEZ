@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SPOOKEZ — Streetwear oscuro, prendas limitadas y diseño independiente.">
+    <meta name="author" content="Manuel Gersol Megía">
+    <title>SPOOKEZ — MORE THAN JUST A BRAND</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+    <!-- =====================================================
+         LOADER
+    ====================================================== -->
+    <div class="loader" id="loader">
+        <canvas class="loader__trail" id="loaderTrail" aria-hidden="true"></canvas>
+        <div class="loader__ghost" id="loaderGhost">
+            <span></span>
+            <span></span>
+        </div>
+        <p class="loader__brand">SPOOKEZ</p>
+        <p class="loader__text">ENTRANDO EN LA OSCURIDAD...</p>
+    </div>
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+    <div class="topbar">
+        <p>ENVÍO GRATIS A PARTIR DE 50 € <span>·</span> CAMBIOS EN 30 DÍAS</p>
+    </div>
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+    <header class="header" id="header">
+        <a class="brand spookez-trigger" href="#inicio" aria-label="SPOOKEZ inicio">
+            <span class="brand__main">SPOOKEZ</span>
+            <span class="brand__sub">MORE THAN JUST A BRAND</span>
+        </a>
+
+        <nav class="nav" id="nav">
+            <a href="#inicio">Inicio</a>
+            <a href="#coleccion">Colección</a>
+            <a href="#historia">Nosotros</a>
+            <a href="#tiendas">Tiendas</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+
+        <div class="header__actions">
+            <button class="header-icon" id="accountButton" aria-label="Mi cuenta">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="8" r="3.5"></circle>
+                    <path d="M5 20c.7-3.4 3.1-5.2 7-5.2s6.3 1.8 7 5.2"></path>
+                </svg>
+            </button>
+
+            <button class="header-icon header-icon--bag" id="cartButton" aria-label="Abrir carrito">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 8h14l-1 12H6L5 8Z"></path>
+                    <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
+                </svg>
+                <span id="cartCount">0</span>
+            </button>
+
+            <button class="menu-button" id="menuButton" aria-label="Abrir menú">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- =================================================
+             HERO
+        ================================================== -->
+        <section class="hero" id="inicio">
+            <div class="hero__background"></div>
+            <div class="hero__overlay"></div>
+
+            <div class="hero__content container">
+                <p class="eyebrow">SPOOKEZ / COLLECTION 01</p>
+                <h1>WEAR<br><em>THE UNUSUAL.</em></h1>
+                <p class="hero__description">
+                    Streetwear oscuro, diseños propios y prendas creadas para no pasar desapercibido.
+                </p>
+
+                <div class="hero__buttons">
+                    <a class="button button--light" href="#coleccion">VER COLECCIÓN</a>
+                    <a class="button button--ghost" href="#historia">CONOCER SPOOKEZ</a>
+                </div>
+            </div>
+
+            <div class="hero__bottom">
+                <span>01 — 04</span>
+                <span>SCROLL TO EXPLORE ↓</span>
+            </div>
+        </section>
+
+        <!-- =================================================
+             MARQUEE
+        ================================================== -->
+        <div class="marquee" aria-hidden="true">
+            <div class="marquee__track">
+                <span>SPOOKEZ</span><i>✦</i><span>MORE THAN JUST A BRAND</span><i>✦</i>
+                <span>SPOOKEZ</span><i>✦</i><span>MORE THAN JUST A BRAND</span><i>✦</i>
+            </div>
+        </div>
+
+        <!-- =================================================
+             COLECCIÓN
+        ================================================== -->
+        <section class="section collection" id="coleccion">
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">SHOP SPOOKEZ</p>
+                        <h2>NEW<br><em>ARRIVALS.</em></h2>
+                    </div>
+                    <p class="section-heading__text">
+                        Una selección de piezas con estética gótica y streetwear contemporáneo.
+                    </p>
+                </div>
+
+                <div class="shop-toolbar">
+                    <div class="filters" id="filters">
+                        <button class="filter is-active" data-filter="all">TODOS</button>
+                        <button class="filter" data-filter="ropa">ROPA</button>
+                        <button class="filter" data-filter="accesorios">ACCESORIOS</button>
+                        <button class="filter" data-filter="coleccion">COLECCIONABLES</button>
+                    </div>
+                    <label class="search">
+                        <span>⌕</span>
+                        <input type="search" id="searchInput" placeholder="Buscar...">
+                    </label>
+                </div>
+
+                <div class="products" id="products">
+                    <!-- Producto 1 -->
+                    <article class="product" data-category="ropa" data-name="Sudadera Spookez" data-price="49.99" data-image="assets/hoodie.jpg">
+                        <div class="product__image">
+                            <img src="assets/hoodie.jpg" alt="Sudadera negra Spookez">
+                            <span class="product__tag">NEW</span>
+                            <button class="product__favorite" aria-label="Añadir a favoritos">♡</button>
+                            <button class="product__quick">VISTA RÁPIDA</button>
+                        </div>
+                        <div class="product__info">
+                            <p class="product__category">ROPA / HOODIE</p>
+                            <h3>Sudadera Spookez</h3>
+                            <div class="product__bottom">
+                                <strong>49,99 €</strong>
+                                <button class="add-button">AÑADIR +</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Producto 2 -->
+                    <article class="product" data-category="ropa" data-name="Camiseta Spookez" data-price="24.99" data-image="assets/shirt.jpg">
+                        <div class="product__image">
+                            <img src="assets/shirt.jpg" alt="Camiseta blanca Spookez">
+                            <span class="product__tag product__tag--light">ESSENTIAL</span>
+                            <button class="product__favorite" aria-label="Añadir a favoritos">♡</button>
+                            <button class="product__quick">VISTA RÁPIDA</button>
+                        </div>
+                        <div class="product__info">
+                            <p class="product__category">ROPA / T-SHIRT</p>
+                            <h3>Camiseta Spookez</h3>
+                            <div class="product__bottom">
+                                <strong>24,99 €</strong>
+                                <button class="add-button">AÑADIR +</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Producto 3 -->
+                    <article class="product" data-category="accesorios" data-name="Gorra Spookez" data-price="19.99" data-image="assets/cap.jpg">
+                        <div class="product__image">
+                            <img src="assets/cap.jpg" alt="Gorra negra Spookez">
+                            <button class="product__favorite" aria-label="Añadir a favoritos">♡</button>
+                            <button class="product__quick">VISTA RÁPIDA</button>
+                        </div>
+                        <div class="product__info">
+                            <p class="product__category">ACCESORIOS / CAP</p>
+                            <h3>Gorra Spookez</h3>
+                            <div class="product__bottom">
+                                <strong>19,99 €</strong>
+                                <button class="add-button">AÑADIR +</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Producto 4 -->
+                    <article class="product" data-category="coleccion" data-name="Figura Spookez" data-price="29.99" data-image="assets/figure.jpg">
+                        <div class="product__image">
+                            <img src="assets/figure.jpg" alt="Figura coleccionable Spookez">
+                            <span class="product__tag">LIMITED</span>
+                            <button class="product__favorite" aria-label="Añadir a favoritos">♡</button>
+                            <button class="product__quick">VISTA RÁPIDA</button>
+                        </div>
+                        <div class="product__info">
+                            <p class="product__category">COLECCIONABLE</p>
+                            <h3>Figura Spookez</h3>
+                            <div class="product__bottom">
+                                <strong>29,99 €</strong>
+                                <button class="add-button">AÑADIR +</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <p class="no-results" id="noResults">No hemos encontrado ningún producto.</p>
+            </div>
+        </section>
+
+        <!-- =================================================
+             HISTORIA
+        ================================================== -->
+        <section class="section story" id="historia">
+            <div class="container story__grid">
+                <div class="story__visual">
+                    <img src="assets/lookbook.jpg" alt="Lookbook de la colección Spookez">
+                    <div class="story__stamp">SPK<br>01</div>
+                </div>
+
+                <div class="story__content">
+                    <p class="eyebrow">THE IDEA</p>
+                    <h2>NO SE TRATA<br>SOLO DE <em>ROPA.</em></h2>
+                    <p>
+                        Spookez nace de una idea sencilla: crear prendas con identidad. Diseños oscuros,
+                        detalles cuidados y una estética que mezcla Halloween, moda urbana y cultura alternativa.
+                    </p>
+                    <p>
+                        Cada pieza busca que quien la lleve pueda expresarse sin tener que seguir las reglas de siempre.
+                    </p>
+
+                    <div class="story__stats">
+                        <div><strong>01</strong><span>COLECCIÓN</span></div>
+                        <div><strong>03</strong><span>CIUDADES</span></div>
+                        <div><strong>∞</strong><span>ACTITUD</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             TIENDAS
+        ================================================== -->
+        <section class="section stores" id="tiendas">
+            <div class="container">
+                <div class="section-heading section-heading--center">
+                    <div>
+                        <p class="eyebrow">FIND US</p>
+                        <h2>NUESTRAS<br><em>TIENDAS.</em></h2>
+                    </div>
+                </div>
+
+                <div class="stores__grid">
+                    <article class="store-card store-card--featured">
+                        <span class="store-card__number">01</span>
+                        <p class="eyebrow">SEDE PRINCIPAL</p>
+                        <h3>MADRID</h3>
+                        <p>El punto de encuentro de la comunidad Spookez.</p>
+                        <span class="store-card__hours">L-V · 10:00 — 20:30</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Spookez+Madrid" target="_blank" rel="noopener">VER MAPA ↗</a>
+                    </article>
+
+                    <article class="store-card">
+                        <span class="store-card__number">02</span>
+                        <p class="eyebrow">STORE</p>
+                        <h3>CÁDIZ</h3>
+                        <p>La colección Spookez también vive junto al mar.</p>
+                        <span class="store-card__hours">L-S · 10:00 — 21:00</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Spookez+Cadiz" target="_blank" rel="noopener">VER MAPA ↗</a>
+                    </article>
+
+                    <article class="store-card">
+                        <span class="store-card__number">03</span>
+                        <p class="eyebrow">STORE</p>
+                        <h3>MÁLAGA</h3>
+                        <p>Descubre nuestras piezas en el sur.</p>
+                        <span class="store-card__hours">L-S · 10:00 — 21:00</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Spookez+Malaga" target="_blank" rel="noopener">VER MAPA ↗</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             CONTACTO
+        ================================================== -->
+        <section class="section contact" id="contacto">
+            <div class="container contact__grid">
+                <div>
+                    <p class="eyebrow">GET IN TOUCH</p>
+                    <h2>HABLEMOS<br>DE <em>SPOOKEZ.</em></h2>
+                    <p class="contact__text">¿Tienes una duda sobre un pedido, una colaboración o la colección? Escríbenos.</p>
+                    <div class="contact__links">
+                        <a href="mailto:hola@spookez.es">hola@spookez.es ↗</a>
+                        <a href="https://github.com/Gersool" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                        <a href="https://www.instagram.com/gersool_/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+                        <a href="https://www.tiktok.com/@lilgersol" target="_blank" rel="noopener noreferrer">TikTok ↗</a>
+                    </div>
+                </div>
+
+                <form class="contact-form" id="contactForm">
+                    <label>Nombre<input type="text" name="name" required placeholder="Tu nombre"></label>
+                    <label>Email<input type="email" name="email" required placeholder="tu@email.com"></label>
+                    <label>Mensaje<textarea name="message" rows="5" required placeholder="Cuéntanos..."></textarea></label>
+                    <button class="button button--light" type="submit">ENVIAR MENSAJE</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+    <footer class="footer">
+        <div class="container footer__top">
+            <a class="brand brand--footer spookez-trigger" href="#inicio">
+                <span class="brand__main">SPOOKEZ</span>
+                <span class="brand__sub">MORE THAN JUST A BRAND</span>
+            </a>
+            <div class="footer__links">
+                <a href="#coleccion">Colección</a>
+                <a href="#historia">Nosotros</a>
+                <a href="#tiendas">Tiendas</a>
+                <a href="#contacto">Contacto</a>
+                <a href="https://github.com/Gersool" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                <a href="https://www.instagram.com/gersool_/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+                <a href="https://www.tiktok.com/@lilgersol" target="_blank" rel="noopener noreferrer">TikTok ↗</a>
+            </div>
+        </div>
+        <div class="container footer__bottom">
+            <span>© 2026 SPOOKEZ</span>
+            <span>BUILT DIFFERENT.</span>
+        </div>
+    </footer>
+
+    <!-- =====================================================
+         CARRITO
+    ====================================================== -->
+    <div class="drawer-overlay" id="cartOverlay">
+        <aside class="drawer" id="cartDrawer">
+            <div class="drawer__header">
+                <div><p class="eyebrow">YOUR BAG</p><h2>MI CARRITO</h2></div>
+                <button class="close-button" data-close="cartOverlay">×</button>
+            </div>
+
+            <div class="drawer__items" id="cartItems"></div>
+
+            <div class="drawer__footer">
+                <div class="total"><span>TOTAL</span><strong id="cartTotal">0,00 €</strong></div>
+                <button class="button button--light button--full" id="checkoutButton">PROCEDER AL PAGO</button>
+                <p class="drawer__note">Pago seguro · Envíos a toda España</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- =====================================================
+         MODAL PRODUCTO
+    ====================================================== -->
+    <div class="modal" id="productModal">
+        <div class="modal__box modal__box--product">
+            <button class="close-button" data-close="productModal">×</button>
+            <div class="modal-product__image"><img id="modalImage" src="" alt=""></div>
+            <div class="modal-product__info">
+                <p class="eyebrow" id="modalCategory">PRODUCTO</p>
+                <h2 id="modalName">Producto</h2>
+                <p id="modalDescription">Diseño exclusivo Spookez.</p>
+                <strong id="modalPrice">0,00 €</strong>
+                <button class="button button--light button--full" id="modalAdd">AÑADIR AL CARRITO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         CUENTA
+    ====================================================== -->
+    <div class="modal" id="accountModal">
+        <div class="modal__box modal__box--account">
+            <button class="close-button" data-close="accountModal">×</button>
+            <div id="accountLoggedOut">
+                <p class="eyebrow">SPOOKEZ ACCOUNT</p>
+                <h2>ENTRA EN<br><em>TU MUNDO.</em></h2>
+
+                <div class="auth-tabs">
+                    <button class="auth-tab is-active" data-auth="login">INICIAR SESIÓN</button>
+                    <button class="auth-tab" data-auth="register">CREAR CUENTA</button>
+                </div>
+
+                <form class="auth-form" id="loginForm">
+                    <label>Email<input type="email" id="loginEmail" required placeholder="tu@email.com"></label>
+                    <label>Contraseña<input type="password" id="loginPassword" required minlength="6" placeholder="Mínimo 6 caracteres"></label>
+                    <button class="button button--light button--full" type="submit">INICIAR SESIÓN</button>
+                </form>
+
+                <form class="auth-form is-hidden" id="registerForm">
+                    <label>Nombre<input type="text" id="registerName" required placeholder="Tu nombre"></label>
+                    <label>Email<input type="email" id="registerEmail" required placeholder="tu@email.com"></label>
+                    <label>Contraseña<input type="password" id="registerPassword" required minlength="6" placeholder="Mínimo 6 caracteres"></label>
+                    <button class="button button--light button--full" type="submit">CREAR CUENTA</button>
+                </form>
+                <p class="demo-note">Modo demo local: los datos se guardan en este navegador. Para producción hay que conectar un backend.</p>
+            </div>
+
+            <div id="accountLoggedIn" class="is-hidden">
+                <p class="eyebrow">WELCOME BACK</p>
+                <h2 id="accountName">USUARIO</h2>
+                <p id="accountEmail" class="account-email"></p>
+                <div class="account-card">
+                    <span>ESTADO</span>
+                    <strong>CUENTA ACTIVA</strong>
+                </div>
+                <button class="button button--outline button--full" id="logoutButton">CERRAR SESIÓN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         CHECKOUT
+    ====================================================== -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal__box modal__box--checkout">
+            <button class="close-button" data-close="checkoutModal">×</button>
+            <p class="eyebrow">CHECKOUT</p>
+            <h2>FINALIZA<br><em>TU PEDIDO.</em></h2>
+
+            <form class="checkout-form" id="checkoutForm">
+                <div class="form-grid">
+                    <label>Nombre<input id="checkoutName" required type="text" placeholder="Nombre y apellidos"></label>
+                    <label>Email<input id="checkoutEmail" required type="email" placeholder="tu@email.com"></label>
+                </div>
+                <label>Dirección<input id="checkoutAddress" required type="text" placeholder="Calle, número, piso..."></label>
+                <div class="form-grid">
+                    <label>Ciudad<input id="checkoutCity" required type="text" placeholder="Madrid"></label>
+                    <label>Código postal<input id="checkoutPostal" required type="text" inputmode="numeric" placeholder="28000"></label>
+                </div>
+
+                <div class="payment-box">
+                    <div class="payment-box__head"><span>PAGO</span><small>STRIPE TEST</small></div>
+                    <p style="font-size:12px;color:#999;margin:0;line-height:1.5">
+                        Al confirmar serás redirigido a <strong style="color:#fff">Stripe</strong> para pagar de forma segura.
+                        Tarjeta de prueba: <code style="color:#f5f5f2">4242 4242 4242 4242</code> · Cualquier fecha futura · CVV 123
+                    </p>
+                </div>
+
+                <button class="button button--light button--full" type="submit">PAGAR CON STRIPE</button>
+                <p class="demo-note">Pago con Stripe en modo TEST. No se cobra dinero real. El pedido se guarda en SQLite cuando el pago se completa. No almacenamos datos de tarjeta.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         PEDIDO COMPLETADO
+    ====================================================== -->
+    <div class="modal" id="successModal">
+        <div class="modal__box success">
+            <span class="success__icon">✓</span>
+            <p class="eyebrow">ORDER CONFIRMED</p>
+            <h2>GRACIAS POR<br><em>ELEGIR SPOOKEZ.</em></h2>
+            <p>Tu pedido de prueba ha sido registrado correctamente.</p>
+            <strong id="orderNumber">SPK-000000</strong>
+            <button class="button button--light button--full" data-close="successModal">SEGUIR COMPRANDO</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <button class="back-top" id="backTop" aria-label="Volver arriba">↑</button>
+
+    <script src="script.js"></script>
+</body>
+</html>

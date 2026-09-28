@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPOOKEZ — Panel de pedidos</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --card: #111;
+      --line: rgba(255,255,255,.12);
+      --text: #f5f5f2;
+      --muted: #888;
+      --accent: #f5f5f2;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 32px 20px 60px;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 28px; letter-spacing: .08em; margin-bottom: 6px; }
+    .sub { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 18px;
+      border-radius: 8px;
+    }
+    .stat strong { display: block; font-size: 26px; margin-top: 4px; }
+    .stat span { color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    th { color: var(--muted); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
+    tr:hover td { background: rgba(255,255,255,.03); }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
+    .badge.paid { background: #1a3a1a; color: #7dffa0; }
+    .badge.pending { background: #3a2a1a; color: #ffcc7d; }
+    .badge.failed { background: #3a1a1a; color: #ff8a8a; }
+    .mono { font-family: ui-monospace, monospace; font-size: 12px; }
+    .detail {
+      margin-top: 28px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      display: none;
+    }
+    .detail.is-open { display: block; }
+    .detail h2 { font-size: 18px; margin-bottom: 12px; }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .detail-grid span { color: var(--muted); }
+    .items { margin-top: 12px; }
+    .items li { padding: 6px 0; border-bottom: 1px solid var(--line); list-style: none; }
+    button {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 11px;
+      border-radius: 4px;
+    }
+    button:hover { background: #222; }
+    .empty { color: var(--muted); padding: 40px 0; text-align: center; }
+    a.back { color: var(--muted); font-size: 12px; text-decoration: none; }
+    a.back:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/">← Volver a la tienda</a>
+    <h1 style="margin-top:16px">SPOOKEZ — Pedidos</h1>
+    <p class="sub">Base de datos SQLite · Datos reales guardados en el servidor</p>
+
+    <div class="stats" id="stats">
+      <div class="stat"><span>Pedidos</span><strong id="sOrders">—</strong></div>
+      <div class="stat"><span>Ingresos</span><strong id="sRevenue">—</strong></div>
+      <div class="stat"><span>Clientes</span><strong id="sCustomers">—</strong></div>
+      <div class="stat"><span>Unidades</span><strong id="sItems">—</strong></div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nº pedido</th>
+          <th>Cliente</th>
+          <th>Email</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="7" class="empty">Cargando…</td></tr>
+      </tbody>
+    </table>
+
+    <div class="detail" id="detail">
+      <h2 id="dTitle">Pedido</h2>
+      <div class="detail-grid" id="dGrid"></div>
+      <ul class="items" id="dItems"></ul>
+    </div>
+  </div>
+
+  <script>
+    const fmt = (n) => Number(n).toFixed(2).replace('.', ',') + ' €';
+
+    async function loadStats() {
+      const r = await fetch('/api/stats');
+      const data = await r.json();
+      if (!data.ok) return;
+      document.getElementById('sOrders').textContent = data.stats.total_orders;
+      document.getElementById('sRevenue').textContent = fmt(data.stats.revenue);
+      document.getElementById('sCustomers').textContent = data.stats.total_customers;
+      document.getElementById('sItems').textContent = data.stats.total_items_sold;
+    }
+
+    async function loadOrders() {
+      const r = await fetch('/api/orders');
+      const data = await r.json();
+      const tbody = document.getElementById('tbody');
+      if (!data.ok || !data.orders.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty">Aún no hay pedidos.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.orders.map(o => `
+        <tr>
+          <td class="mono">${o.order_number}</td>
+          <td>${escapeHtml(o.customer_name)}</td>
+          <td>${escapeHtml(o.customer_email)}</td>
+          <td>${fmt(o.total_amount)}</td>
+          <td><span class="badge ${o.payment_status}">${o.payment_status}</span></td>
+          <td>${o.created_at?.replace('T', ' ').slice(0, 19) || '—'}</td>
+          <td><button data-id="${o.id}">Ver</button></td>
+        </tr>
+      `).join('');
+
+      tbody.querySelectorAll('button[data-id]').forEach(btn => {
+        btn.addEventListener('click', () => showDetail(btn.dataset.id));
+      });
+    }
+
+    async function showDetail(id) {
+      const r = await fetch('/api/orders/' + id);
+      const data = await r.json();
+      if (!data.ok) return;
+      const o = data.order;
+      const detail = document.getElementById('detail');
+      document.getElementById('dTitle').textContent = o.order_number;
+      document.getElementById('dGrid').innerHTML = `
+        <div><span>Cliente</span><br>${escapeHtml(o.customer_name)}</div>
+        <div><span>Email</span><br>${escapeHtml(o.customer_email)}</div>
+        <div><span>Dirección</span><br>${escapeHtml(o.address)}</div>
+        <div><span>Ciudad / CP</span><br>${escapeHtml(o.city)} · ${escapeHtml(o.postal_code)}</div>
+        <div><span>País</span><br>${escapeHtml(o.country || 'España')}</div>
+        <div><span>Total</span><br>${fmt(o.total_amount)}</div>
+        <div><span>Pago</span><br>${o.payment_status} · ${o.payment_method || '—'}${o.payment_last4 ? ' · ****' + o.payment_last4 : ''}</div>
+        <div><span>Ref. pago</span><br class="mono">${o.payment_ref || '—'}</div>
+      `;
+      document.getElementById('dItems').innerHTML = data.items.map(i =>
+        `<li>${escapeHtml(i.product_name)} × ${i.quantity} — ${fmt(i.line_total)}</li>`
+      ).join('');
+      detail.classList.add('is-open');
+      detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, c =>
+        ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])
+      );
+    }
+
+    loadStats();
+    loadOrders();
+  </script>
+</body>
+</html>
