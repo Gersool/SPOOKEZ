@@ -236,7 +236,7 @@ const renderCart = () => {
     $('#cartTotal').textContent = formatPrice(total);
 
     if (!cart.length) {
-        itemsContainer.innerHTML = '<div class="empty-cart">TU CARRITO ESTÁ VACÍO.</div>';
+        itemsContainer.innerHTML = '<div class="empty-cart">' + (window.SpookezI18n ? SpookezI18n.t('cart.empty') : 'TU CARRITO ESTÁ VACÍO.') + '</div>';
         saveCart();
         return;
     }
@@ -253,7 +253,7 @@ const renderCart = () => {
                     <button data-action="increase" data-index="${index}">+</button>
                 </div>
             </div>
-            <button class="cart-remove" data-action="remove" data-index="${index}">ELIMINAR</button>
+            <button class="cart-remove" data-action="remove" data-index="${index}">${window.SpookezI18n ? SpookezI18n.t('cart.remove') : 'ELIMINAR'}</button>
         </div>
     `).join('');
 
@@ -275,7 +275,7 @@ const addToCart = (product) => {
     }
 
     renderCart();
-    showToast(`${product.name} añadido al carrito`);
+    showToast(`${product.name} ` + (window.SpookezI18n ? SpookezI18n.t('cart.added') : 'añadido al carrito'));
 };
 
 const initCart = () => {
@@ -482,7 +482,7 @@ const initCheckout = () => {
 
     $('#checkoutButton').addEventListener('click', () => {
         if (!cart.length) {
-            showToast('Tu carrito está vacío');
+            showToast(window.SpookezI18n ? SpookezI18n.t('toast.emptyCart') : 'Tu carrito está vacío');
             return;
         }
 
@@ -802,4 +802,169 @@ document.addEventListener('DOMContentLoaded', () => {
     initLayers();
     initVisualInteractions();
     initSpookezEasterEgg();
+});
+
+/* =========================================================
+   i18n + ACCESIBILIDAD + YOUTUBE (reproductor oficial)
+========================================================= */
+const initI18nUI = () => {
+    if (!window.SpookezI18n) return;
+    const select = $('#langSelect');
+    const current = SpookezI18n.getLang();
+    if (select) {
+        select.value = current;
+        select.addEventListener('change', () => {
+            SpookezI18n.setLang(select.value);
+            const cap = $('#videoCaptionLang');
+            if (cap) {
+                const map = { es: 'es', en: 'en', zh: 'zh-Hans', de: 'de' };
+                cap.value = map[select.value] || 'es';
+                // Recargar iframes ya insertados con nuevo idioma de subtítulos
+                $$('.video-frame iframe').forEach((iframe) => {
+                    const id = iframe.closest('.video-frame')?.dataset.youtubeId;
+                    if (id) iframe.src = buildYoutubeSrc(id, cap.value);
+                });
+            }
+        });
+    }
+    SpookezI18n.apply();
+    document.addEventListener('spookez:lang', () => {
+        // Actualizar placeholders dinámicos del carrito vacío etc. en próximo render
+        if (typeof renderCart === 'function') renderCart();
+    });
+};
+
+const initA11yPrefs = () => {
+    const panel = $('#a11yPanel');
+    const toggle = $('#a11yToggle');
+    const keys = {
+        contrast: 'spookezA11yContrast',
+        large: 'spookezA11yLarge',
+        motion: 'spookezA11yMotion'
+    };
+
+    const applyPref = (cls, on) => document.body.classList.toggle(cls, on);
+
+    const contrast = $('#a11yContrast');
+    const large = $('#a11yLarge');
+    const motion = $('#a11yMotion');
+
+    if (contrast) {
+        contrast.checked = localStorage.getItem(keys.contrast) === '1';
+        applyPref('a11y-contrast', contrast.checked);
+        contrast.addEventListener('change', () => {
+            localStorage.setItem(keys.contrast, contrast.checked ? '1' : '0');
+            applyPref('a11y-contrast', contrast.checked);
+        });
+    }
+    if (large) {
+        large.checked = localStorage.getItem(keys.large) === '1';
+        applyPref('a11y-large', large.checked);
+        large.addEventListener('change', () => {
+            localStorage.setItem(keys.large, large.checked ? '1' : '0');
+            applyPref('a11y-large', large.checked);
+        });
+    }
+    if (motion) {
+        const prefers = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        motion.checked = localStorage.getItem(keys.motion) === '1' || prefers;
+        applyPref('a11y-motion', motion.checked);
+        motion.addEventListener('change', () => {
+            localStorage.setItem(keys.motion, motion.checked ? '1' : '0');
+            applyPref('a11y-motion', motion.checked);
+        });
+    }
+
+    toggle?.addEventListener('click', () => {
+        const open = panel?.hasAttribute('hidden') === false && panel.classList.contains('is-open');
+        if (!panel) return;
+        if (open) {
+            panel.classList.remove('is-open');
+            panel.hidden = true;
+            toggle.setAttribute('aria-expanded', 'false');
+        } else {
+            panel.hidden = false;
+            panel.classList.add('is-open');
+            toggle.setAttribute('aria-expanded', 'true');
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && panel?.classList.contains('is-open')) {
+            panel.classList.remove('is-open');
+            panel.hidden = true;
+            toggle?.setAttribute('aria-expanded', 'false');
+            toggle?.focus();
+        }
+    });
+};
+
+function buildYoutubeSrc(videoId, lang) {
+    const cc = encodeURIComponent(lang || 'es');
+    // youtube-nocookie + parámetros de subtítulos / UI en idioma
+    return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?rel=0&modestbranding=1&cc_load_policy=1&cc_lang_pref=${cc}&hl=${cc}&playsinline=1`;
+}
+
+const initVideos = () => {
+    const captionSelect = $('#videoCaptionLang');
+    const mapLang = () => {
+        const ui = window.SpookezI18n ? SpookezI18n.getLang() : 'es';
+        const m = { es: 'es', en: 'en', zh: 'zh-Hans', de: 'de' };
+        return captionSelect?.value || m[ui] || 'es';
+    };
+    if (captionSelect && window.SpookezI18n) {
+        const m = { es: 'es', en: 'en', zh: 'zh-Hans', de: 'de' };
+        captionSelect.value = m[SpookezI18n.getLang()] || 'es';
+    }
+
+    captionSelect?.addEventListener('change', () => {
+        $$('.video-frame iframe').forEach((iframe) => {
+            const id = iframe.closest('.video-frame')?.dataset.youtubeId;
+            if (id) iframe.src = buildYoutubeSrc(id, captionSelect.value);
+        });
+    });
+
+    const loadVideo = (frame) => {
+        if (!frame || frame.querySelector('iframe')) return;
+        const id = frame.dataset.youtubeId;
+        if (!id) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = buildYoutubeSrc(id, mapLang());
+        iframe.title = frame.dataset.titleKey && window.SpookezI18n
+            ? SpookezI18n.t(frame.dataset.titleKey)
+            : 'YouTube video';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        iframe.loading = 'lazy';
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+        iframe.addEventListener('error', () => {
+            frame.innerHTML = `<p role="alert" style="padding:20px;color:#ccc">${window.SpookezI18n ? SpookezI18n.t('videos.error') : 'Error'}</p>`;
+        });
+        frame.innerHTML = '';
+        frame.appendChild(iframe);
+    };
+
+    $$('[data-load-video]').forEach((btn) => {
+        btn.addEventListener('click', () => loadVideo(btn.closest('.video-frame')));
+    });
+
+    // Lazy: al entrar en viewport, solo mostramos el botón; el iframe se carga al clic
+    // (evita bloqueos y ahorra red). Opcionalmente auto-load al visible:
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                // No auto-insertamos iframe hasta interacción (mejor para rendimiento y consentimiento implícito)
+                io.unobserve(entry.target);
+            });
+        }, { rootMargin: '100px' });
+        $$('.video-frame').forEach((f) => io.observe(f));
+    }
+};
+
+// Hook into DOMContentLoaded chain
+document.addEventListener('DOMContentLoaded', () => {
+    initI18nUI();
+    initA11yPrefs();
+    initVideos();
 });

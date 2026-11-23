@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    <a class="skip-link" href="#inicio" data-i18n="a11y.skip">Saltar al contenido principal</a>
     <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
     <!-- =====================================================
          LOADER
@@ -41,22 +42,30 @@
         </a>
 
         <nav class="nav" id="nav">
-            <a href="#inicio">Inicio</a>
-            <a href="#coleccion">Colección</a>
-            <a href="#historia">Nosotros</a>
-            <a href="#tiendas">Tiendas</a>
-            <a href="#contacto">Contacto</a>
+            <a href="#inicio" data-i18n="nav.home">Inicio</a>
+            <a href="#coleccion" data-i18n="nav.collection">Colección</a>
+            <a href="#historia" data-i18n="nav.story">Nosotros</a>
+            <a href="#videos" data-i18n="nav.videos">Vídeos</a>
+            <a href="#tiendas" data-i18n="nav.stores">Tiendas</a>
+            <a href="#contacto" data-i18n="nav.contact">Contacto</a>
         </nav>
 
         <div class="header__actions">
-            <button class="header-icon" id="accountButton" aria-label="Mi cuenta">
+            <label class="sr-only" for="langSelect" data-i18n="a11y.lang">Idioma</label>
+            <select class="lang-select" id="langSelect" data-i18n-aria="a11y.lang" aria-label="Idioma">
+                <option value="es">ES</option>
+                <option value="en">EN</option>
+                <option value="zh">中文</option>
+                <option value="de">DE</option>
+            </select>
+            <button class="header-icon" id="accountButton" data-i18n-aria="a11y.account" aria-label="Mi cuenta">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="12" cy="8" r="3.5"></circle>
                     <path d="M5 20c.7-3.4 3.1-5.2 7-5.2s6.3 1.8 7 5.2"></path>
                 </svg>
             </button>
 
-            <button class="header-icon header-icon--bag" id="cartButton" aria-label="Abrir carrito">
+            <button class="header-icon header-icon--bag" id="cartButton" data-i18n-aria="a11y.cart" aria-label="Abrir carrito">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M5 8h14l-1 12H6L5 8Z"></path>
                     <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
@@ -64,7 +73,7 @@
                 <span id="cartCount">0</span>
             </button>
 
-            <button class="menu-button" id="menuButton" aria-label="Abrir menú">☰</button>
+            <button class="menu-button" id="menuButton" data-i18n-aria="a11y.menu" aria-label="Abrir menú">☰</button>
         </div>
     </header>
 
@@ -240,6 +249,62 @@
             </div>
         </section>
 
+
+        <!-- =================================================
+             VÍDEOS (YouTube oficial, lazy, subtítulos por idioma)
+        ================================================== -->
+        <section class="section videos" id="videos" aria-labelledby="videos-heading">
+            <div class="container">
+                <div class="section-heading section-heading--center">
+                    <div>
+                        <p class="eyebrow" data-i18n="videos.eyebrow">LOOKBOOK EN VÍDEO</p>
+                        <h2 id="videos-heading"><span data-i18n="videos.title1">WATCH</span><br><em data-i18n="videos.title2">SPOOKEZ.</em></h2>
+                    </div>
+                </div>
+                <p class="videos__intro" data-i18n="videos.intro">
+                    Vídeos integrados con el reproductor oficial de YouTube. Elige el idioma de subtítulos. La carga es diferida para no ralentizar la página.
+                </p>
+                <div class="videos__toolbar">
+                    <label>
+                        <span data-i18n="videos.langLabel">Idioma de subtítulos</span>
+                        <select id="videoCaptionLang" class="lang-select" aria-label="Caption language">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                            <option value="zh-Hans">中文</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="video-grid">
+                    <article class="video-card">
+                        <div class="video-frame" data-youtube-id="D8EYG6nUQGo" data-title-key="videos.v1.title">
+                            <button type="button" class="video-poster" data-load-video>
+                                <span data-i18n="videos.load">Cargar vídeo</span>
+                            </button>
+                        </div>
+                        <div class="video-card__meta">
+                            <h3 data-i18n="videos.v1.title">Lookbook — Collection 01</h3>
+                            <p data-i18n="videos.v1.desc">Presentación de la colección Spookez.</p>
+                        </div>
+                    </article>
+                    <article class="video-card">
+                        <div class="video-frame" data-youtube-id="csJoWLpNcqQ" data-title-key="videos.v2.title">
+                            <button type="button" class="video-poster" data-load-video>
+                                <span data-i18n="videos.load">Cargar vídeo</span>
+                            </button>
+                        </div>
+                        <div class="video-card__meta">
+                            <h3 data-i18n="videos.v2.title">Behind the brand</h3>
+                            <p data-i18n="videos.v2.desc">Ideas, diseño y actitud Spookez.</p>
+                        </div>
+                    </article>
+                </div>
+                <p class="video-note" data-i18n="videos.autoNote">
+                    Los subtítulos usan las pistas de YouTube (manuales o traducción automática cuando estén disponibles). No se descarga el vídeo ni se instalan extensiones.
+                </p>
+            </div>
+        </section>
+
         <!-- =================================================
              TIENDAS
         ================================================== -->
@@ -320,10 +385,10 @@
                 <span class="brand__sub">MORE THAN JUST A BRAND</span>
             </a>
             <div class="footer__links">
-                <a href="#coleccion">Colección</a>
+                <a href="#coleccion" data-i18n="nav.collection">Colección</a>
                 <a href="#historia">Nosotros</a>
                 <a href="#tiendas">Tiendas</a>
-                <a href="#contacto">Contacto</a>
+                <a href="#contacto" data-i18n="nav.contact">Contacto</a>
                 <a href="https://github.com/Gersool" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
                 <a href="https://www.instagram.com/gersool_/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
                 <a href="https://www.tiktok.com/@lilgersol" target="_blank" rel="noopener noreferrer">TikTok ↗</a>
@@ -466,6 +531,19 @@
     <div class="toast" id="toast"></div>
     <button class="back-top" id="backTop" aria-label="Volver arriba">↑</button>
 
+    
+    <!-- Preferencias de accesibilidad -->
+    <div class="a11y-bar">
+      <div class="a11y-panel" id="a11yPanel" role="dialog" aria-labelledby="a11yTitle" hidden>
+        <h2 id="a11yTitle" data-i18n="a11y.prefs">Preferencias de accesibilidad</h2>
+        <label><input type="checkbox" id="a11yContrast"> <span data-i18n="a11y.contrast">Alto contraste</span></label>
+        <label><input type="checkbox" id="a11yLarge"> <span data-i18n="a11y.text">Texto grande</span></label>
+        <label><input type="checkbox" id="a11yMotion"> <span data-i18n="a11y.motion">Reducir animaciones</span></label>
+      </div>
+      <button type="button" class="a11y-toggle" id="a11yToggle" data-i18n-aria="a11y.prefs" aria-label="Preferencias de accesibilidad" aria-expanded="false" aria-controls="a11yPanel">♿</button>
+    </div>
+
+    <script src="i18n.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

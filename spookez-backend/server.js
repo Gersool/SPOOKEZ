@@ -45,7 +45,15 @@ if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 // ---------------------------------------------------------------------------
 // SQLite
 // ---------------------------------------------------------------------------
-const db = new DatabaseSync(DB_FILE);
+let db;
+try {
+  db = new DatabaseSync(DB_FILE);
+  console.log('SQLite OK →', DB_FILE);
+} catch (err) {
+  console.error('ERROR abriendo SQLite:', err);
+  console.error('Node version:', process.version, '(hace falta Node 22+)');
+  process.exit(1);
+}
 
 db.exec(`
   PRAGMA foreign_keys = ON;
@@ -551,12 +559,20 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
+const HOST = '0.0.0.0';
+const PORT_NUM = Number(PORT) || 3000;
+
+server.listen(PORT_NUM, HOST, () => {
   console.log('');
   console.log('  SPOOKEZ API (SQLite + Stripe)');
-  console.log('  Tienda:     http://localhost:' + PORT);
-  console.log('  Admin:      http://localhost:' + PORT + '/admin');
-  console.log('  Base datos: ' + DB_FILE);
-  console.log('  Stripe:     ' + (STRIPE_SECRET_KEY ? 'CONFIGURADO ✓' : 'NO CONFIGURADO — crea .env con STRIPE_SECRET_KEY'));
+  console.log('  Escuchando:  http://' + HOST + ':' + PORT_NUM);
+  console.log('  Base datos:  ' + DB_FILE);
+  console.log('  Stripe:      ' + (STRIPE_SECRET_KEY ? 'CONFIGURADO' : 'NO CONFIGURADO (falta STRIPE_SECRET_KEY)'));
+  console.log('  Node:        ' + process.version);
   console.log('');
+});
+
+server.on('error', (err) => {
+  console.error('Error al arrancar el servidor:', err);
+  process.exit(1);
 });

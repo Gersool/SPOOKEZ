@@ -1,45 +1,39 @@
-# SPOOKEZ — SQLite + Stripe Checkout
+# SPOOKEZ — Tienda accesible + multilingüe + SQLite + Stripe
 
 ## Qué incluye
 
-- **Base de datos SQLite** (`data/spookez.db`) con tablas `orders`, `order_items`, `customers`
-- **Pasarela de pago Stripe** (modo test: no cobra dinero real)
-- Panel admin en `/admin`
+- Tienda streetwear (HTML/CSS/JS)
+- **4 idiomas**: Español, English, 中文, Deutsch (`public/i18n.js`)
+- **Accesibilidad**: skip link, teclado, alto contraste, texto grande, reducir animaciones
+- **Vídeos YouTube** oficiales con lazy load y subtítulos por idioma
+- **SQLite** (`data/spookez.db`) + panel `/admin`
+- **Stripe Checkout** modo test
 
-## Configurar Stripe (obligatorio para pagar)
+Ver detalle técnico y limitaciones en `docs/ACCESIBILIDAD-Y-MULTILINGUE.md`.
 
-1. Entra en https://dashboard.stripe.com/test/apikeys
-2. Copia la **Secret key** (`sk_test_...`)
-3. Crea el archivo `.env` en esta carpeta:
+## Arranque local
 
-```
-PORT=3000
-STRIPE_SECRET_KEY=sk_test_tu_clave_aqui
-```
-
-4. Arranca:
+Requisito: **Node.js 22+**
 
 ```bash
+# .env
+PORT=3000
+STRIPE_SECRET_KEY=sk_test_...
+
 node server.js
 ```
 
-## Probar un pago
+- Tienda: http://localhost:3000  
+- Admin: http://localhost:3000/admin  
+- Tarjeta test: `4242 4242 4242 4242`
 
-1. http://localhost:3000 → añade productos → checkout
-2. Te redirige a Stripe
-3. Tarjeta de prueba: `4242 4242 4242 4242`
-   - Fecha: cualquier futura (ej. 12/34)
-   - CVV: 123
-4. Tras pagar vuelves a la tienda y el pedido se guarda en SQLite
-5. Véalo en http://localhost:3000/admin
+## Render
 
-## Requisitos
+- Start command: `node server.js`
+- Env: `STRIPE_SECRET_KEY`, `NODE_VERSION=22`
+- Si los archivos están en subcarpeta: Root Directory = esa carpeta
+- No subir `.env` ni `node_modules`
 
-- Node.js **22+** (usa `node:sqlite` nativo)
-- Cuenta Stripe en modo **Test**
+## Autor
 
-## Importante
-
-- No uses claves `sk_live_` hasta estar en producción
-- Nunca subas el archivo `.env` a GitHub
-- No se almacenan números de tarjeta
+Manuel Gersol Megía
