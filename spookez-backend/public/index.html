@@ -539,6 +539,13 @@
         <label><input type="checkbox" id="a11yContrast"> <span data-i18n="a11y.contrast">Alto contraste</span></label>
         <label><input type="checkbox" id="a11yLarge"> <span data-i18n="a11y.text">Texto grande</span></label>
         <label><input type="checkbox" id="a11yMotion"> <span data-i18n="a11y.motion">Reducir animaciones</span></label>
+        <hr class="a11y-sep" />
+        <label><input type="checkbox" id="a11ySpeakClick"> <span data-i18n="a11y.speakClick">Leer al hacer clic</span></label>
+        <div class="a11y-speak-actions">
+          <button type="button" class="a11y-speak-btn" id="a11ySpeakSel" data-i18n="a11y.speakSel">Leer selección</button>
+          <button type="button" class="a11y-speak-btn a11y-speak-btn--stop" id="a11ySpeakStop" data-i18n="a11y.speakStop">Parar voz</button>
+        </div>
+        <p class="a11y-speak-hint" data-i18n="a11y.speakHint">Activa “Leer al clic” y pulsa un texto, o selecciona texto y pulsa “Leer selección”. No lee toda la página.</p>
       </div>
       <button type="button" class="a11y-toggle" id="a11yToggle" data-i18n-aria="a11y.prefs" aria-label="Preferencias de accesibilidad" aria-expanded="false" aria-controls="a11yPanel">♿</button>
     </div>

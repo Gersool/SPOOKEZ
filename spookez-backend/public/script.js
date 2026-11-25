@@ -834,13 +834,72 @@ const initI18nUI = () => {
     });
 };
 
+/* Voz bajo demanda (Web Speech API). No es Loquendo Carlos (propietario),
+   pero elige voz masculina es-ES del sistema si existe. Solo lee clic/selección. */
+const SpookezTTS = (() => {
+    const supported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+    let preferredVoice = null;
+
+    const pickVoice = () => {
+        if (!supported) return null;
+        const voices = window.speechSynthesis.getVoices() || [];
+        const lang = (window.SpookezI18n ? SpookezI18n.getLang() : 'es');
+        const langMap = { es: 'es', en: 'en', zh: 'zh', de: 'de' };
+        const want = langMap[lang] || 'es';
+        // Preferir voces masculinas / nombres tipo Carlos, Jorge, Diego, Pablo…
+        const maleHints = /carlos|jorge|diego|pablo|miguel|antonio|male|hombre|man|david|mark|stefan|yunyang/i;
+        const byLang = voices.filter((v) => (v.lang || '').toLowerCase().startsWith(want));
+        const male = byLang.find((v) => maleHints.test(v.name)) || byLang.find((v) => /male/i.test(v.name));
+        preferredVoice = male || byLang[0] || voices.find((v) => (v.lang || '').toLowerCase().startsWith('es')) || voices[0] || null;
+        return preferredVoice;
+    };
+
+    if (supported) {
+        pickVoice();
+        window.speechSynthesis.onvoiceschanged = () => pickVoice();
+    }
+
+    const stop = () => {
+        if (!supported) return;
+        window.speechSynthesis.cancel();
+    };
+
+    const speak = (text) => {
+        if (!supported) return;
+        const clean = String(text || '').replace(/\s+/g, ' ').trim();
+        if (!clean) return;
+        stop();
+        const u = new SpeechSynthesisUtterance(clean);
+        const voice = preferredVoice || pickVoice();
+        if (voice) u.voice = voice;
+        const lang = window.SpookezI18n ? SpookezI18n.getLang() : 'es';
+        const langTag = { es: 'es-ES', en: 'en-US', zh: 'zh-CN', de: 'de-DE' }[lang] || 'es-ES';
+        u.lang = (voice && voice.lang) || langTag;
+        u.rate = 1;
+        u.pitch = 1;
+        window.speechSynthesis.speak(u);
+    };
+
+    const speakSelection = () => {
+        const sel = window.getSelection && String(window.getSelection());
+        if (sel && sel.trim()) {
+            speak(sel);
+            return true;
+        }
+        return false;
+    };
+
+    return { supported, speak, speakSelection, stop, pickVoice };
+})();
+
 const initA11yPrefs = () => {
     const panel = $('#a11yPanel');
     const toggle = $('#a11yToggle');
     const keys = {
         contrast: 'spookezA11yContrast',
         large: 'spookezA11yLarge',
-        motion: 'spookezA11yMotion'
+        motion: 'spookezA11yMotion',
+        speakClick: 'spookezA11ySpeakClick'
     };
 
     const applyPref = (cls, on) => document.body.classList.toggle(cls, on);
@@ -848,6 +907,9 @@ const initA11yPrefs = () => {
     const contrast = $('#a11yContrast');
     const large = $('#a11yLarge');
     const motion = $('#a11yMotion');
+    const speakClick = $('#a11ySpeakClick');
+    const speakSelBtn = $('#a11ySpeakSel');
+    const speakStopBtn = $('#a11ySpeakStop');
 
     if (contrast) {
         contrast.checked = localStorage.getItem(keys.contrast) === '1';
@@ -875,6 +937,56 @@ const initA11yPrefs = () => {
         });
     }
 
+    // Leer solo al clic / selección (no toda la página)
+    if (speakClick) {
+        speakClick.checked = localStorage.getItem(keys.speakClick) === '1';
+        applyPref('a11y-speak-click', speakClick.checked);
+        speakClick.addEventListener('change', () => {
+            localStorage.setItem(keys.speakClick, speakClick.checked ? '1' : '0');
+            applyPref('a11y-speak-click', speakClick.checked);
+            if (!speakClick.checked) SpookezTTS.stop();
+        });
+    }
+
+    speakSelBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!SpookezTTS.speakSelection()) {
+            // Si no hay selección, avisar brevemente
+            const msg = window.SpookezI18n ? SpookezI18n.t('a11y.speakHint') : 'Selecciona texto primero';
+            if (typeof showToast === 'function') showToast(msg.slice(0, 80));
+        }
+    });
+
+    speakStopBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        SpookezTTS.stop();
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!speakClick?.checked) return;
+        if (e.target.closest('.a11y-bar, .a11y-panel, #a11yToggle, #a11ySpeakSel, #a11ySpeakStop')) return;
+        if (e.target.closest('input, textarea, select, button, a.brand')) return;
+        const el = e.target.closest('p, h1, h2, h3, h4, li, span, label, strong, em, .product__category, .product__info, .hero__description, .section-heading__text, .store-card, .video-card__meta, .drawer__note, .eyebrow, .button, .filter, .add-button');
+        if (!el) return;
+        const text = (el.innerText || el.textContent || '').trim();
+        if (text.length < 2) return;
+        e.preventDefault();
+        SpookezTTS.speak(text);
+    }, true);
+
+    // Atajo: Alt+S = leer selección
+    document.addEventListener('keydown', (e) => {
+        if (e.altKey && (e.key === 's' || e.key === 'S')) {
+            e.preventDefault();
+            SpookezTTS.speakSelection();
+        }
+        if (e.key === 'Escape') SpookezTTS.stop();
+    });
+
+    document.addEventListener('spookez:lang', () => SpookezTTS.pickVoice());
+
     toggle?.addEventListener('click', () => {
         const open = panel?.hasAttribute('hidden') === false && panel.classList.contains('is-open');
         if (!panel) return;
@@ -886,6 +998,7 @@ const initA11yPrefs = () => {
             panel.hidden = false;
             panel.classList.add('is-open');
             toggle.setAttribute('aria-expanded', 'true');
+            SpookezTTS.pickVoice();
         }
     });
 
@@ -902,7 +1015,7 @@ const initA11yPrefs = () => {
 function buildYoutubeSrc(videoId, lang) {
     const cc = encodeURIComponent(lang || 'es');
     // youtube-nocookie + parámetros de subtítulos / UI en idioma
-    return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?rel=0&modestbranding=1&cc_load_policy=1&cc_lang_pref=${cc}&hl=${cc}&playsinline=1`;
+    return `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?rel=0&modestbranding=1&cc_load_policy=1&cc_lang_pref=${cc}&hl=${cc}&playsinline=1&origin=` + encodeURIComponent(location.origin || '');
 }
 
 const initVideos = () => {

@@ -1394,3 +1394,51 @@ body.a11y-motion *::after {
   .header { grid-template-columns: 1fr auto; }
   .lang-select { font-size: 10px; padding: 0 10px; min-height: 38px; }
 }
+
+
+/* TTS / voz bajo demanda */
+.a11y-sep {
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,.15);
+  margin: 10px 0;
+}
+.a11y-speak-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.a11y-speak-btn {
+  flex: 1;
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: #1a1a1a;
+  color: #f5f5f2;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.a11y-speak-btn:hover,
+.a11y-speak-btn:focus-visible {
+  background: #f5f5f2;
+  color: #050505;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.a11y-speak-btn--stop {
+  border-color: rgba(220, 80, 80, .5);
+}
+body.a11y-speak-click,
+body.a11y-speak-click * {
+  cursor: help;
+}
+.a11y-speak-hint {
+  margin: 10px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #999;
+}
